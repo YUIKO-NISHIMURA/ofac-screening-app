@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../Button';
-import { getMonths, getDays, getYears } from './helper';
+import { MONTHS, DAYS, YEARS } from './helper';
 import DateSelector from './DateSelector';
 import FormField from './FormField';
 import { FormDataType, FormErrorType } from '../../types/Form';
@@ -23,13 +23,10 @@ const Form: React.FC<FormProps> = ({
   countries,
 }) => {
   const [errors, setErrors] = useState<FormErrorType>({
-    name: true,
+    name: false,
     birthDate: false,
     country: false,
   });
-
-  const [focusedInput, setFocusedInput] = useState<keyof FormErrorType | ''>('');
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -63,7 +60,6 @@ const Form: React.FC<FormProps> = ({
       country: '',
     });
   };
-
   return (
     <>
       <h2 className="text-3xl">Sanctions List Search</h2>
@@ -81,27 +77,43 @@ const Form: React.FC<FormProps> = ({
           type="text"
           value={formData.name}
           onChange={(e) => handleInputChange(e)}
-          onBlur={() => {handleBlurAndValidate(); setFocusedInput('name');}}
-          hasError={errors.name && focusedInput === 'name'}
+          onBlur={() => {handleBlurAndValidate();}}
+          hasError={errors.name}
           errorMessage="Name is required."
         />
         <div className="mb-4 space-x-4">
           <div className="w-full">
             <label className="block mb-1">Date of Birth</label>
             <div className="grid grid-cols-4 gap-2">
-              {['Month', 'Day', 'Year'].map((unit) => (
-                <DateSelector
-                  key={unit}
-                  label={unit}
-                  name={`birth${unit}`}
-                  value={formData[`birth${unit}` as keyof FormDataType]}
-                  options={unit === 'Month' ? getMonths() : unit === 'Day' ? getDays() : getYears()}
-                  onChange={handleInputChange}
-                  onBlur={() => { handleBlurAndValidate(); setFocusedInput('birthDate'); }}
-                  hasError={errors.birthDate && focusedInput === 'birthDate'}
-                  errorMessage="Birth date is required."
-                />
-              ))}
+              <DateSelector
+                label="Month"
+                name="birthMonth"
+                value={formData.birthMonth}
+                options={MONTHS}
+                onChange={handleInputChange}
+                onBlur={handleBlurAndValidate}
+                hasError={errors.birthDate}
+                errorMessage="Birth date is required."
+              />
+              <DateSelector
+                label="Day"
+                name="birthDay"
+                value={formData.birthDay}
+                options={DAYS}
+                onChange={handleInputChange}
+                onBlur={handleBlurAndValidate}
+                hasError={errors.birthDate}
+              />
+              <DateSelector
+                label="Year"
+                name="birthYear"
+                value={formData.birthYear}
+                options={YEARS}
+                onChange={handleInputChange}
+                onBlur={handleBlurAndValidate}
+                hasError={errors.birthDate}
+              />
+
             </div>
           </div>
         </div>
@@ -112,8 +124,8 @@ const Form: React.FC<FormProps> = ({
           value={formData.country}
           options={countries}
           onChange={(e) => handleInputChange(e)}
-          onBlur={() => {handleBlurAndValidate(); setFocusedInput('country');}}
-          hasError={errors.country && focusedInput === 'country'}
+          onBlur={() => {handleBlurAndValidate();}}
+          hasError={errors.country}
           errorMessage="Country is required."
         />
         {apiError && <p className='text-red-500 text-xl'>{apiError}</p>}
@@ -129,7 +141,7 @@ const Form: React.FC<FormProps> = ({
           disabled={Object.values(errors).some(Boolean)} 
         />
         <Button
-          onClick={() => { handleReset(); }}
+          onClick={() => handleReset()}
           label="Reset"
           bgColor="black"
         />

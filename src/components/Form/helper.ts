@@ -1,48 +1,23 @@
 import { MonthType } from "../../types/Form";
 
-export const getMonths = () => {
-    const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+export const MONTHS = Array.from({ length: 12 }, (_, index) => {
+    const date = new Date(2000, index, 1);
+    return date.toLocaleString('en-US', { month: 'long' });
+});
 
-    return months
-};
+export const DAYS = Array.from({ length: 31 }, (_, index) => index + 1);
 
-export const getDays = () => {
-    const days = Array.from({ length: 31 }, (_, index) => index + 1);
-
-    return days;
-};
-
-export const getYears = () => {
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 100 }, (_, index) => currentYear - index);
-    
-    return years;
-};
+export const YEARS = Array.from({ length: 100 }, (_, index) => new Date().getFullYear() - index);
 
 export const formatMonth = (rawMonth: MonthType) => {
-    const monthMap = {
-        January: '01',
-        February: '02',
-        March: '03',
-        April: '04',
-        May: '05',
-        June: '06',
-        July: '07',
-        August: '08',
-        September: '09',
-        October: '10',
-        November: '11',
-        December: '12',
-    };
-
-    return monthMap[rawMonth];
+    // Formats the raw month string to a two-digit month representation.
+    const monthIndex = MONTHS.indexOf(rawMonth);
+    const monthDate = new Date(2000, monthIndex, 1);
+    return (monthDate.getMonth() + 1).toString().padStart(2, '0');
 };
 
 export const formatDay = (rawDay:string) => {
     // Add leading zero if day is less than 10
     const dayNumber = parseInt(rawDay, 10);
-    return dayNumber < 10 ? `0${dayNumber}` : dayNumber.toString();
+    return dayNumber < 10 ? `0${dayNumber}` : dayNumber.toString().padStart(2, '0');
 };

@@ -14,7 +14,7 @@ interface DateSelectorProps {
 
 const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options, onChange, onBlur, hasError, errorMessage }) => {
   return (
-    <div className={`relative ${label === 'Month' && 'col-span-2'}`}>
+    <div className={`relative ${name === 'birthMonth' && 'col-span-2'}`}>
       <label htmlFor={name} className='absolute left-2 text-xs py-1 text-gray-500'>
         {label}
       </label>

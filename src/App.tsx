@@ -19,7 +19,6 @@ const OfacSearch: React.FC = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null); 
   const [searchData, setsearchData] = useState<ApiResponse | null>(null); 
-
   useEffect(() => {
     const fetchCountryData = async () => {
       const sortedCountries = await fetchCountries();
@@ -45,12 +44,12 @@ const OfacSearch: React.FC = () => {
   };
   
   return (
-    <div className="bg-y-gray p-8 h-screen">
+    <div className="p-8">
       <header className='pb-8'>
         <h1 className="text-4xl font-bold">OFAC Screening</h1>
         <a className="border-b border-y-blue text-y-blue pb-1" href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" target="_blank" rel="noreferrer">What is OFAC?</a>
       </header>
-      <div className="bg-white px-6 py-12 rounded-md sm:w-1/2 w-full m-auto">
+      <div className="bg-white px-6 py-12 rounded-md w-full md:w-1/2 m-auto">
         {showResult && searchData ? (
           <Result
             searchData={searchData}
