@@ -42,4 +42,4 @@ The application is deployed and accessible at [OFAC Screening App](https://ofac-
 # Additional Notes
 
 - The application uses the [OFAC API](https://your-ofac-api-url.com) for sanctions list searches.
-- For more information on Specially Designated Nationals List data formats and data schemas, visit [OFAC - Data Formats & Data Schemas](https://ofac.treasury.gov/specially-designated-nationals-list-data-formats-data-schemas).
+- For more information on Specially Designated Nationals List, visit [OFAC](https://ofac.treasury.gov/).
