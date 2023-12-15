@@ -16,7 +16,7 @@ OFAC Search is a web application crafted to conduct searches against the OFAC sa
 
 ## Deployment
 
-The application is deployed and accessible at OFAC Screening App.
+The application is deployed and accessible at [OFAC Screening App](https://ofac-screening-app.vercel.app/).
 
 # Usage
 
