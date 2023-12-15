@@ -69,6 +69,13 @@ const Form: React.FC<FormProps> = ({
       <h2 className="text-3xl">Sanctions List Search</h2>
       <main className='my-6'>
         <FormField
+          label="Type"
+          name="type"
+          type="text"
+          value="Individual"
+          isFixedValue={true}
+        />
+        <FormField
           label="Name"
           name="name"
           type="text"
@@ -81,13 +88,12 @@ const Form: React.FC<FormProps> = ({
         <div className="mb-4 space-x-4">
           <div className="w-full">
             <label className="block mb-1">Date of Birth</label>
-            <div className="flex space-x-2 w-full">
+            <div className="grid grid-cols-4 gap-2">
               {['Month', 'Day', 'Year'].map((unit) => (
                 <DateSelector
                   key={unit}
                   label={unit}
                   name={`birth${unit}`}
-                  widthHalf={unit === 'Month'}
                   value={formData[`birth${unit}` as keyof FormDataType]}
                   options={unit === 'Month' ? getMonths() : unit === 'Day' ? getDays() : getYears()}
                   onChange={handleInputChange}
@@ -113,19 +119,19 @@ const Form: React.FC<FormProps> = ({
         {apiError && <p className='text-red-500 text-xl'>{apiError}</p>}
 
       </main>
-      <div className="flex space-x-2 w-full">
+      <p>*This information is based on data provided by OFAC SDN.</p>
+      <a className="border-b border-y-blue text-y-blue pb-1" href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" target="_blank" rel="noreferrer">*Check for last Update</a>
+      <div className="flex space-x-2 w-full mt-4">
         <Button
           onClick={handleSearchClick}
           label="Search"
-          bgColor={Object.values(errors).some(Boolean) ? "gray-400" : "y-green" }
-          textColor="white"
+          bgColor={Object.values(errors).some(Boolean) ? "gray" : "blue" }
           disabled={Object.values(errors).some(Boolean)} 
         />
         <Button
           onClick={() => { handleReset(); }}
           label="Reset"
           bgColor="black"
-          textColor="white"
         />
       </div>
     </>

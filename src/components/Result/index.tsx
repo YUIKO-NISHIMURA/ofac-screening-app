@@ -26,20 +26,20 @@ const Result: React.FC<UserData> = ({ searchData, name, dateOfBirth, country, ha
 
   return (
     <main className="text-center mt-4">
-      <h2 className={`text-5xl ${isMatch ? 'text-y-hit' : 'text-y-green'}`}>
+      <h2 className={`text-5xl ${isMatch ? 'text-y-red' : 'text-y-blue'}`}>
         {isMatch ? 'Hit' : 'Clear'}
       </h2>
-      <section className="my-4">
+      <section className="my-4 inline-block items-center justify-center">
         <UserDataItem label="Name" value={name} isMatch={isMatch}/>
         <UserDataItem label="Date of Birth" value={dateOfBirth} isMatch={isdateOfBirthMatch}/>
         <UserDataItem label="Country" value={country} isMatch={isCountryMatch}/>
       </section>
       <div className="text-sm">
-        <p>※This information is based on data provided by SDN.</p>
-        <a className="border-b border-y-green text-y-green pb-1" href="https://sanctionssearch.ofac.treas.gov/">For more information...</a>
+        <p>*This information is based on data provided by OFAC SDN.</p>
+        <a className="border-b border-y-blue text-y-blue pb-1" href="https://sanctionssearch.ofac.treas.gov/" target="_blank" rel="noreferrer">For more information...</a>
       </div>
       <div className="w-1/2 inline-grid mt-6">
-        <Button onClick={handleBack} label="Back" bgColor="y-green" textColor="white" />
+        <Button onClick={handleBack} label="Back" bgColor="blue"/>
       </div>
     </main>
   );

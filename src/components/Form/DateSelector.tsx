@@ -8,14 +8,13 @@ interface DateSelectorProps {
   options: string[] | number[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  widthHalf?: boolean;
   hasError?: boolean;
   errorMessage?: string;
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options, onChange, onBlur, widthHalf, hasError, errorMessage }) => {
+const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options, onChange, onBlur, hasError, errorMessage }) => {
   return (
-    <div className={`relative w-${widthHalf ? '1/2' : '1/4'}`}>
+    <div className={`relative ${label === 'Month' && 'col-span-2'}`}>
       <label htmlFor={name} className='absolute left-2 text-xs py-1 text-gray-500'>
         {label}
       </label>
@@ -25,7 +24,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full pt-5 p-2 border rounded h-12 focus:outline-none ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+          className={`w-full pt-5 pb-1 px-2 border rounded h-12 focus:outline-none ${hasError ? 'border-red-500' : 'border-gray-300'}`}
         >
           <option disabled value=""></option>
           {options.map((item, index) => (

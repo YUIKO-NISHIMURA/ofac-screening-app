@@ -7,9 +7,10 @@ module.exports = {
     extend: {
       colors: {
         'y-gray': '#EBEDF2',
-        'y-green': '#008000',
-        'y-hit': '#EF0107',
-        'y-clear': '#CFF2D7',
+        'y-blue': '#007FFF',
+        'y-red': '#EF0107',
+        'y-hit': '#FFDCE5',
+        'y-clear': '#B9D9EB',
       }
     },
   },

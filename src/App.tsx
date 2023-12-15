@@ -46,11 +46,10 @@ const OfacSearch: React.FC = () => {
   
   return (
     <div className="bg-y-gray p-8 h-screen">
-      <h1 className="text-4xl font-bold pb-8">OFAC Screening</h1>
-      {/* <p className="text-gray-600 mb-4 w-80">
-        OFAC Search (also known as OFAC Screening, OFAC Scrubbing, and OFAC List Screening) is the process by which organizations identify whether or not any parties involved in a transaction can be found on watch lists maintained by the Office of Foreign Assets Control (OFAC), a division of U.S. Department of the Treasury.
-      </p> */}
-
+      <header className='pb-8'>
+        <h1 className="text-4xl font-bold">OFAC Screening</h1>
+        <a className="border-b border-y-blue text-y-blue pb-1" href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" target="_blank" rel="noreferrer">What is OFAC?</a>
+      </header>
       <div className="bg-white px-6 py-12 rounded-md sm:w-1/2 w-full m-auto">
         {showResult && searchData ? (
           <Result
