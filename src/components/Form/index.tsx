@@ -1,95 +1,133 @@
-// Form.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../Button';
 import { getMonths, getDays, getYears } from './helper';
 import DateSelector from './DateSelector';
 import FormField from './FormField';
+import { FormDataType, FormErrorType } from '../../types/Form';
 
 interface FormProps {
-  formData: {
-    name: string;
-    birthMonth: string;
-    birthDay: string;
-    birthYear: string;
-    country: string;
-  };
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  apiError: string | null;
+  formData: FormDataType;
+  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
+  setApiError: React.Dispatch<React.SetStateAction<string | null>>;
   handleSearch: () => void;
-  handleReset: () => void;
   countries: string[];
 }
 
 const Form: React.FC<FormProps> = ({
+  apiError,
   formData,
-  handleInputChange,
+  setFormData,
+  setApiError,
   handleSearch,
-  handleReset,
   countries,
 }) => {
+  const [errors, setErrors] = useState<FormErrorType>({
+    name: true,
+    birthDate: false,
+    country: false,
+  });
+
+  const [focusedInput, setFocusedInput] = useState<keyof FormErrorType | ''>('');
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      name: formData.name.trim() === '',
+      birthDate: formData.birthMonth === '' || formData.birthDay === '' || formData.birthYear === '',
+      country: formData.country === '',
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(Boolean);
+  };
+
+  const handleSearchClick = () => {
+    if (validateForm()) handleSearch();
+  };
+
+  const handleBlurAndValidate = () => validateForm();
+  const handleReset = () => {
+    setErrors({ name: false, birthDate: false, country: false });
+    setApiError(null);
+    setFormData({
+      name: '',
+      birthMonth: '',
+      birthDay: '',
+      birthYear: '',
+      country: '',
+    });
+  };
+
   return (
     <>
-        <h2 className="text-3xl">Sanctions List Search</h2>
-        <main className='my-6'>
-          <FormField
-            label="Name"
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <div className="mb-4 space-x-4">
-            <div className="w-full">
-              <label className="block mb-1">Date of Birth</label>
-              <div className="flex space-x-2 w-full">
+      <h2 className="text-3xl">Sanctions List Search</h2>
+      <main className='my-6'>
+        <FormField
+          label="Name"
+          name="name"
+          type="text"
+          value={formData.name}
+          onChange={(e) => handleInputChange(e)}
+          onBlur={() => {handleBlurAndValidate(); setFocusedInput('name');}}
+          hasError={errors.name && focusedInput === 'name'}
+          errorMessage="Name is required."
+        />
+        <div className="mb-4 space-x-4">
+          <div className="w-full">
+            <label className="block mb-1">Date of Birth</label>
+            <div className="flex space-x-2 w-full">
+              {['Month', 'Day', 'Year'].map((unit) => (
                 <DateSelector
-                  label="Month"
-                  name="birthMonth"
-                  value={formData.birthMonth}
-                  options={getMonths()}
+                  key={unit}
+                  label={unit}
+                  name={`birth${unit}`}
+                  widthHalf={unit === 'Month'}
+                  value={formData[`birth${unit}` as keyof FormDataType]}
+                  options={unit === 'Month' ? getMonths() : unit === 'Day' ? getDays() : getYears()}
                   onChange={handleInputChange}
-                  widthHalf={true}
+                  onBlur={() => { handleBlurAndValidate(); setFocusedInput('birthDate'); }}
+                  hasError={errors.birthDate && focusedInput === 'birthDate'}
+                  errorMessage="Birth date is required."
                 />
-                <DateSelector
-                  label="Day"
-                  name="birthDay"
-                  value={formData.birthDay}
-                  options={getDays()}
-                  onChange={handleInputChange}
-                />
-                <DateSelector
-                  label="Year"
-                  name="birthYear"
-                  value={formData.birthYear}
-                  options={getYears()}
-                  onChange={handleInputChange}
-                />
-              </div>
+              ))}
             </div>
           </div>
-          <FormField
-            label="Country"
-            name="country"
-            type="select"
-            value={formData.country}
-            options={countries}
-            onChange={handleInputChange}
-          />
-        </main>
-        <div className="flex space-x-2 w-full">
-            <Button
-              onClick={handleSearch}
-              label="Search"
-              bgColor="y-green"
-              textColor="white"
-            />
-            <Button
-              onClick={handleReset}
-              label="Reset"
-              bgColor="gray-300"
-              textColor="gray-700"
-            />
         </div>
+        <FormField
+          label="Country"
+          name="country"
+          type="select"
+          value={formData.country}
+          options={countries}
+          onChange={(e) => handleInputChange(e)}
+          onBlur={() => {handleBlurAndValidate(); setFocusedInput('country');}}
+          hasError={errors.country && focusedInput === 'country'}
+          errorMessage="Country is required."
+        />
+        {apiError && <p className='text-red-500 text-xl'>{apiError}</p>}
 
+      </main>
+      <div className="flex space-x-2 w-full">
+        <Button
+          onClick={handleSearchClick}
+          label="Search"
+          bgColor={Object.values(errors).some(Boolean) ? "gray-400" : "y-green" }
+          textColor="white"
+          disabled={Object.values(errors).some(Boolean)} 
+        />
+        <Button
+          onClick={() => { handleReset(); }}
+          label="Reset"
+          bgColor="black"
+          textColor="white"
+        />
+      </div>
     </>
   );
 };

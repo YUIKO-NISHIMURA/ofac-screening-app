@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCountries } from './api/fetchCountries';
+import { searchOFAC } from './api/searchOfac';
+import { formatDay, formatMonth } from './components/Form/helper';
 import Form from './components/Form/index';
 import Result from './components/Result/index';
+import { FormDataType } from './types/Form';
+import { ApiResponse } from './types/Result';
 
-const OFACSearch: React.FC = () => {
-  const [formData, setFormData] = useState({
+const OfacSearch: React.FC = () => {
+  const [formData, setFormData] = useState<FormDataType>({
     name: '',
     birthMonth: '',
     birthDay: '',
@@ -13,6 +17,8 @@ const OFACSearch: React.FC = () => {
   });
   const [countries, setCountries] = useState<string[]>([]);
   const [showResult, setShowResult] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<string | null>(null); 
+  const [searchData, setsearchData] = useState<ApiResponse | null>(null); 
 
   useEffect(() => {
     const fetchCountryData = async () => {
@@ -23,29 +29,21 @@ const OFACSearch: React.FC = () => {
     fetchCountryData();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSearch = () => {
-    setShowResult(true)
+  const handleSearch = async () => {
+    try {
+      setApiError(null);
+      const resultData:ApiResponse  = await searchOFAC(formData);
+      setsearchData(resultData);
+      setShowResult(true)
+    } catch (error: any) {
+      setApiError(error.message);
+    }
   };
 
   const handleBack = () => {
     setShowResult(false)
   };
-
-  const handleReset = () => {
-    setFormData({
-      name: '',
-      birthMonth: '',
-      birthDay: '',
-      birthYear: '',
-      country: '',
-    });
-  };
-
+  
   return (
     <div className="bg-y-gray p-8 h-screen">
       <h1 className="text-4xl font-bold pb-8">OFAC Screening</h1>
@@ -54,21 +52,22 @@ const OFACSearch: React.FC = () => {
       </p> */}
 
       <div className="bg-white px-6 py-12 rounded-md sm:w-1/2 w-full m-auto">
-        {!showResult ? (
-          <Form
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSearch={handleSearch}
-            handleReset={handleReset}
-            countries={countries}
+        {showResult && searchData ? (
+          <Result
+            searchData={searchData}
+            name={formData.name}
+            dateOfBirth={formData.birthMonth && `${formData.birthYear}-${formatMonth(formData.birthMonth)}-${formatDay(formData.birthDay)}`}
+            country={formData.country}
+            handleBack={handleBack}
           />
         ) : (
-          <Result
-            match={true}
-            name= 'John Doe'
-            dateOfBirth= '01/01/1990'
-            country= 'USA'
-            handleBack={handleBack}
+          <Form
+            apiError={apiError}
+            formData={formData}
+            setFormData={setFormData}
+            setApiError={setApiError}
+            handleSearch={handleSearch}
+            countries={countries}
           />
         )}
       </div>
@@ -76,4 +75,4 @@ const OFACSearch: React.FC = () => {
   );
 };
 
-export default OFACSearch;
+export default OfacSearch;

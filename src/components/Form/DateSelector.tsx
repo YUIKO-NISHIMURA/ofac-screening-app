@@ -1,4 +1,4 @@
-// DateSelector.tsx
+
 import React from 'react';
 
 interface DateSelectorProps {
@@ -7,28 +7,35 @@ interface DateSelectorProps {
   value: string;
   options: string[] | number[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   widthHalf?: boolean;
+  hasError?: boolean;
+  errorMessage?: string;
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options, onChange, widthHalf }) => {
+const DateSelector: React.FC<DateSelectorProps> = ({ label, name, value, options, onChange, onBlur, widthHalf, hasError, errorMessage }) => {
   return (
     <div className={`relative w-${widthHalf ? '1/2' : '1/4'}`}>
       <label htmlFor={name} className='absolute left-2 text-xs py-1 text-gray-500'>
         {label}
       </label>
-      <select
-        name={name}
-        value={value}
-        onChange={onChange}
-        className={`w-full pt-5 p-2 border border-gray-300 rounded h-12 focus:border-y-green outline-none`}
-      >
-        <option disabled value=""></option>
-        {options.map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          className={`w-full pt-5 p-2 border rounded h-12 focus:outline-none ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+        >
+          <option disabled value=""></option>
+          {options.map((item, index) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+        {hasError && label === 'Month' && <p className="text-red-500 text-xs">{errorMessage}</p>}
+      </div>
     </div>
   );
 };
