@@ -10,32 +10,13 @@ OFAC Search is a web application crafted to conduct searches against the OFAC sa
 
 ## Technologies Used
 
-- **React:** 
-- **Tailwind CSS:** 
+- **React** 
+- **Tailwind CSS** 
 - **API Integration:** Utilizes an external API to fetch country data and perform searches against the OFAC sanctions list.
 
-## Getting Started
+## Deployment
 
-To run the application locally, follow these steps:
-
-
-1. Clone the repository:
-    ```bash
-    git clone <repository_url>
-    cd ofac-search-app
-    ```
-
-2. Install dependencies::
-    ```bash
-    npm install 
-    ```
-
-3. Run the application:
-    ```bash
-    npm start
-    ```
-
-The application should be accessible at http://localhost:3000.
+The application is deployed and accessible at OFAC Screening App.
 
 # Usage
 
